@@ -1,0 +1,35 @@
+# Example terraform.tfvars file
+# Copy this file to terraform.tfvars and customize the values
+
+# Resource Group Configuration
+resource_group_name = "aks-demo-rg"
+location            = "East US"
+
+# AKS Cluster Configuration
+cluster_name       = "aks-demo-cluster"
+dns_prefix         = "aksdemo"
+kubernetes_version = "1.27.7"
+
+# Node Pool Configuration
+default_node_pool_name = "default"
+node_count             = 2
+vm_size                = "Standard_D2s_v3"
+
+# Auto-scaling Configuration
+enable_auto_scaling = true
+min_count           = 1
+max_count           = 5
+
+# Disk Configuration
+os_disk_size_gb = 30
+
+# Network Configuration
+network_plugin = "kubenet"
+network_policy = "calico"
+
+# Tags
+tags = {
+  Environment = "Demo"
+  ManagedBy   = "Terraform"
+  Project     = "AKS-Demo"
+}
