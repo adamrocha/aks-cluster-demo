@@ -7,7 +7,7 @@ variable "resource_group_name" {
 variable "location" {
   description = "Azure region for resources"
   type        = string
-  default     = "East US"
+  default     = "West US 2"
 }
 
 variable "cluster_name" {
@@ -25,7 +25,7 @@ variable "dns_prefix" {
 variable "kubernetes_version" {
   description = "Kubernetes version"
   type        = string
-  default     = "1.27.7"
+  default     = "1.31.11"
 }
 
 variable "default_node_pool_name" {
@@ -43,7 +43,7 @@ variable "node_count" {
 variable "vm_size" {
   description = "Size of the VMs in the node pool"
   type        = string
-  default     = "Standard_D2s_v3"
+  default     = "Standard_B2s"
 }
 
 variable "enable_auto_scaling" {
