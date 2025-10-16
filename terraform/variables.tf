@@ -13,7 +13,7 @@ variable "location" {
 variable "cluster_name" {
   description = "Name of the AKS cluster"
   type        = string
-  default     = "aks-demo-cluster"
+  default     = "aks-cluster-demo"
 }
 
 variable "dns_prefix" {
