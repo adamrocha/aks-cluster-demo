@@ -46,7 +46,7 @@ variable "vm_size" {
   default     = "Standard_B2s"
 }
 
-variable "enable_auto_scaling" {
+variable "auto_scaling_enabled" {
   description = "Enable auto-scaling for the node pool"
   type        = bool
   default     = true
