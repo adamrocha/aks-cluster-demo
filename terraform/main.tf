@@ -1,36 +1,41 @@
-provider "azurerm" {
-  features {}
-}
-
 # Resource Group
 resource "azurerm_resource_group" "aks" {
-  name     = var.resource_group_name
-  location = var.location
+  name     = "aks-demo-rg"
+  location = "West US 2"
 
   tags = var.tags
 }
 
 # AKS Cluster
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = var.cluster_name
-  location            = azurerm_resource_group.aks.location
-  resource_group_name = azurerm_resource_group.aks.name
-  dns_prefix          = var.dns_prefix
-  kubernetes_version  = var.kubernetes_version
+  # checkov:skip=CKV_AZURE_170: Will switch to "Standard" SKU when EncryptionAtHost is enabled
+  # checkov:skip=CKV_AZURE_227: Subscription does not enable EncryptionAtHost
+  name                      = "aks-cluster-demo"
+  location                  = "West US 2"
+  resource_group_name       = azurerm_resource_group.aks.name
+  dns_prefix                = "aksdemo"
+  kubernetes_version        = "1.31.11"
+  local_account_disabled    = false
+  private_cluster_enabled   = true
+  automatic_upgrade_channel = "stable"
+  sku_tier                  = "Free"
 
   default_node_pool {
-    name                         = var.default_node_pool_name
-    node_count                   = var.node_count
-    vm_size                      = var.vm_size
-    enable_auto_scaling          = var.enable_auto_scaling
-    min_count                    = var.enable_auto_scaling ? var.min_count : null
-    max_count                    = var.enable_auto_scaling ? var.max_count : null
+    name                         = "default"
+    vm_size                      = "Standard_B2s"
+    auto_scaling_enabled         = true
+    min_count                    = 1
+    max_count                    = 5
+    max_pods                     = 50
     os_disk_type                 = "Ephemeral"
-    enable_host_encryption       = true
-    os_disk_size_gb              = var.os_disk_size_gb
+    host_encryption_enabled      = false
+    os_disk_size_gb              = 30
     only_critical_addons_enabled = true
     type                         = "VirtualMachineScaleSets"
-    tags                         = var.tags
+
+    tags = {
+      Environment = "dev"
+    }
   }
 
   identity {
@@ -38,9 +43,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin    = var.network_plugin
+    network_policy    = "calico"
+    network_plugin    = "kubenet"
     load_balancer_sku = "standard"
-    network_policy    = var.network_policy
+  }
+
+  key_vault_secrets_provider {
+    secret_rotation_enabled  = true
+    secret_rotation_interval = "2m"
   }
 
   tags = var.tags
