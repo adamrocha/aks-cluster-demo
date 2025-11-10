@@ -1,3 +1,9 @@
+SHELL := /bin/bash
+S3_BUCKET=terraform-state-bucket-2727
+DYNAMO_TABLE=terraform-locks
+TF_DIR=terraform
+
+
 tf-format:
 	cd $(TF_DIR) && terraform fmt
 	@echo "✅ Terraform files formatted."
