@@ -11,6 +11,7 @@ output "cluster_name" {
 output "cluster_id" {
   description = "ID of the AKS cluster"
   value       = azurerm_kubernetes_cluster.aks.id
+  sensitive   = true
 }
 
 output "kube_config" {
@@ -32,4 +33,5 @@ output "node_resource_group" {
 output "identity_principal_id" {
   description = "Principal ID of the system assigned identity"
   value       = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+  sensitive   = true
 }
