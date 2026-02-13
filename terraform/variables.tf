@@ -1,4 +1,4 @@
-variable "resource_group_name" {
+variable "resource_group" {
   description = "Name of the resource group"
   type        = string
   default     = "aks-demo-rg"
@@ -7,7 +7,7 @@ variable "resource_group_name" {
 variable "location" {
   description = "Azure region for resources"
   type        = string
-  default     = "West US 2"
+  default     = "eastus"
 }
 
 variable "cluster_name" {
@@ -19,19 +19,19 @@ variable "cluster_name" {
 variable "dns_prefix" {
   description = "DNS prefix for the AKS cluster"
   type        = string
-  default     = "aksdemo"
+  default     = "aks-demo"
 }
 
 variable "kubernetes_version" {
   description = "Kubernetes version"
   type        = string
-  default     = "1.31.11"
+  default     = "1.34.1"
 }
 
-variable "default_node_pool_name" {
+variable "node_pool" {
   description = "Name of the default node pool"
   type        = string
-  default     = "default"
+  default     = "nodepool"
 }
 
 variable "node_count" {
@@ -90,3 +90,48 @@ variable "tags" {
     ManagedBy   = "Terraform"
   }
 }
+
+# Azure Container Registry Variables
+variable "acr_name" {
+  description = "Name of the Azure Container Registry (must be globally unique, alphanumeric only)"
+  type        = string
+  default     = "aksdemoacr2026"
+}
+
+variable "acr_sku" {
+  description = "SKU for Azure Container Registry (Basic, Standard, Premium)"
+  type        = string
+  default     = "Basic"
+  validation {
+    condition     = contains(["Basic", "Standard", "Premium"], var.acr_sku)
+    error_message = "ACR SKU must be Basic, Standard, or Premium"
+  }
+}
+
+variable "acr_georeplications" {
+  description = "List of Azure regions for ACR geo-replication (Premium SKU only)"
+  type = list(object({
+    location                = string
+    zone_redundancy_enabled = bool
+  }))
+  default = []
+}
+
+variable "repo_name" {
+  description = "Name of the container repository"
+  type        = string
+  default     = "hello-world-demo"
+}
+
+variable "image_tag" {
+  description = "Docker image tag"
+  type        = string
+  default     = "v1.0.0"
+}
+
+variable "platforms" {
+  description = "Target platforms for multi-arch image build"
+  type        = list(string)
+  default     = ["linux/amd64", "linux/arm64"]
+}
+
